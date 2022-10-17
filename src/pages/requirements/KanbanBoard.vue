@@ -205,16 +205,15 @@
   </ContentContainer>
 </template>
 <script>
-import KanbanCard from "../components/KanbanCard.vue";
-import Navbar from "../components/Navbar.vue";
-import Loading from "vue-loading-overlay";
-import ContentContainer from "../components/ContentContainer.vue";
+import KanbanCard from "../../components/KanbanCard.vue";
+import Navbar from "../../components/Navbar.vue";
+import ContentContainer from "../../components/ContentContainer.vue";
+import { collect } from 'collect.js';
 
 export default {
   components: {
     KanbanCard,
     Navbar,
-    Loading,
     ContentContainer,
   },
   data() {
@@ -246,8 +245,11 @@ export default {
         .getRequestsData();
     },
     onSuccessRequest(data) {
-      this.requests = JSON.parse(data);
-      this.initialRequests = JSON.parse(data);
+
+      let collection = collect(JSON.parse(data)).sortByDesc('requestId').all();
+
+      this.requests = collection
+      this.initialRequests = collection
 
       this.usersLists = this.initialRequests.map((val) => val.requestUser);
 

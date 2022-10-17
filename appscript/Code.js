@@ -1,7 +1,17 @@
+const REQUESTS_KEY = 'REQUESTS';
+const REQUESTS_HEADERS_KEY = 'REQUESTS_HEADERS';
+const DURATION_CACHE_TIME = 3600;
+
 function doGet() {
     return HtmlService.createTemplateFromFile('index')
         .evaluate()
         .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
+}
+
+function resetCache() {
+    const cache = CacheService.getScriptCache();
+
+    cache.remove(REQUESTS_KEY);
 }
 
 function getRequestsData() {
@@ -11,15 +21,18 @@ function getRequestsData() {
     let requestSheet = spreadSheet.getSheetByName('REQUEST');
     let [headers, ...data] = requestSheet.getDataRange().getValues()
 
-    const databaseAsObjectArray = data.map(row => {
+    return JSON.stringify(
+        sanitizeData(data, headers)
+    );
+}
+
+function sanitizeData(data, headers) {
+    return data.map(row => {
         return row.reduce((acc, value, i) => {
           const key = headers[i];
           if (key === '') return acc;
           return { ...acc, [key]: value };
         }, {});
     });
-
-    return JSON.stringify(
-        databaseAsObjectArray
-    );
 }
+

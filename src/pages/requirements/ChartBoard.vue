@@ -43,7 +43,7 @@
   </ContentContainer>
 </template>
 <script>
-import ContentContainer from "../components/ContentContainer.vue";
+import ContentContainer from "../../components/ContentContainer.vue";
 import Chart from "chart.js/auto";
 import { collect } from "collect.js";
 
