@@ -1,6 +1,6 @@
 <template>
   <ContentContainer :title="'Kanban Board'">
-    <div class="row mb-2">
+    <div class="row mb-2 d-flex justify-content-center">
       <div class="col-md-3 form-group">
         <label for="site">Site</label>
         <select

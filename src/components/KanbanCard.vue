@@ -11,7 +11,7 @@
                 :aria-controls="'#collapse-' + req.requestId"
                 class="text-reset"
             >
-                <strong>{{ req.requestId }}</strong> - {{ req.requestType }} - <strong>{{ req.requestBrand }}</strong>
+                <strong>{{ req.requestId }}</strong> - {{ req.requestType }} - <span :class="getBrandColor(req)">{{ req.requestBrand }}</span>
             </a>
         </p>
       </div>
@@ -28,9 +28,6 @@
           <div class="col-md-12">
             <strong>Request user: </strong>{{ req.requestUser }}
           </div>
-          <div class="col-md-12">
-            <strong>Active days: </strong> {{ req.activeDays }}
-          </div>
         </div>
       </div>
       </div>
@@ -45,6 +42,8 @@
     </div>
 </template>
 <script>
+import { brandColor  } from '../utils/color.utils';
+
 export default {
   props: {
     req: {
@@ -54,6 +53,11 @@ export default {
     cardType: {
         type: String,
         deafult: 'card card-outline card-secondary'
+    }
+  },
+  methods: {
+    getBrandColor(request) {
+      return brandColor(request)
     }
   }
 };

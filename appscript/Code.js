@@ -15,11 +15,23 @@ function resetCache() {
 }
 
 function getRequestsData() {
+    const cache = CacheService.getScriptCache();
+
+    const cachedData = cache.get(REQUESTS_KEY);
+
+    if (cachedData) {
+        return cachedData;
+    }
+
     const spreadSheet = SpreadsheetApp
         .openByUrl('https://docs.google.com/spreadsheets/d/1hIMcoX4MLztbbG_p8oRie4duxd-sxiN_7LML91hEfK8/edit#gid=234180280');
-
+    
     let requestSheet = spreadSheet.getSheetByName('REQUEST');
-    let [headers, ...data] = requestSheet.getDataRange().getValues()
+    let [headers, ...data] = requestSheet.getDataRange().getValues();
+
+    cache.put(REQUESTS_KEY, JSON.stringify(
+        sanitizeData(data, headers)
+    ));
 
     return JSON.stringify(
         sanitizeData(data, headers)
