@@ -11,7 +11,7 @@
                 :aria-controls="'#collapse-' + req.requestId"
                 class="text-reset"
             >
-                <strong>{{ req.requestId }}</strong> - {{ req.requestType }} - <span :class="getBrandColor(req)">{{ req.requestBrand }}</span>
+                <strong>{{ req.requestId }}</strong> - {{ req.requestTitle}}
             </a>
         </p>
       </div>
@@ -20,13 +20,16 @@
         <div class="card-body">
         <div class="row">
           <div class="col-md-12">
-            <h5>{{ req.requestTitle }}</h5>
             <p class="text-muted">
               {{ req.requestDescription }}
             </p>
           </div>
           <div class="col-md-12">
             <strong>Request user: </strong>{{ req.requestUser }}
+          </div>
+
+          <div class="col-md-12">
+            <strong>KPIS's: </strong> {{ req.requestReason }}
           </div>
         </div>
       </div>
@@ -35,7 +38,7 @@
       <div class="card-footer">
         <div class="row">
           <div class="col-md-12">
-            <strong>KPIS's: </strong> {{ req.requestReason }}
+            {{ req.requestType }} - <span :class="getBrandColor(req)">{{ req.requestBrand }}</span>
           </div>
         </div>
       </div>

@@ -1,6 +1,16 @@
 const REQUESTS_KEY = 'REQUESTS';
 const REQUESTS_HEADERS_KEY = 'REQUESTS_HEADERS';
 const DURATION_CACHE_TIME = 3600;
+const emails = [
+    "adrian_alberto_faz_jr@whirlpool.com",
+    "dorlee_garcia@whirlpool.com",
+    "victor_jesus_bravo@whirlpool.com",
+    "kattia_puga@whirlpool.com",
+    "octavio_r_giron@whirlpool.com",
+    "nicolas_carvajal_mapower@whirlpool.com",
+    "karen_marin@whirlpool.com",
+    "marcelo_lozada@whirlpool.com"
+];
 
 function doGet() {
     return HtmlService.createTemplateFromFile('index')
@@ -15,6 +25,10 @@ function resetCache() {
 }
 
 function getRequestsData() {
+    const user = Session.getActiveUser();
+
+    Logger.log(user);
+
     const cache = CacheService.getScriptCache();
 
     const cachedData = cache.get(REQUESTS_KEY);
@@ -36,6 +50,10 @@ function getRequestsData() {
     return JSON.stringify(
         sanitizeData(data, headers)
     );
+}
+
+function isAuthorizedUser(user) {
+    
 }
 
 function sanitizeData(data, headers) {
