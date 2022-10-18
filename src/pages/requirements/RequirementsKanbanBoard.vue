@@ -1,62 +1,72 @@
 <template>
-  <ContentContainer :title="'Kanban Board'">
-    <div class="row mb-2 d-flex justify-content-center">
-      <div class="col-md-3 form-group">
-        <label for="site">Site</label>
-        <select
-          class="form-control"
-          v-model="brandFilter"
-          name="site"
-          id="site"
-          @change="setFilters"
-        >
-          <option value="">Select site to view</option>
-          <option value="Whirlpool MX">Whirlpool MX</option>
-          <option value="Maytag MX">Maytag MX</option>
-          <option value="Acros MX">Acros MX</option>
-          <option value="KitchenAid MX">Kitchenaid MX</option>
-          <option value="Whirlpool CO">Whirlpool CO</option>
-          <option value="KitchenAid CO">Kitchenaid CO</option>
-          <option value="Whirlpool GT">Whirlpool GT</option>
-          <option value="KitchenAid GT">Kitchenaid GT</option>
-          <option value="Whirlpool EC">Whirlpool EC</option>
-          <option value="Whirlpool PR">Whirlpool PR</option>
-          <option value="KitchenAid PR">Kitchenaid PR</option>
-          <option value="KitchenAid PE">Kitchenaid PE</option>
-        </select>
+  <ContentContainer :title="'Requirements Kanban Board'">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Filters</h3>
       </div>
 
-      <div class="col-md-3 form-group">
-        <label for="requestType">Request Type</label>
-        <select
-          class="form-control"
-          name="requestType"
-          id="requestType"
-          @change="setFilters"
-          v-model="requestTypeFilter"
-        >
-          <option value="">Select request type</option>
-          <option value="Website improvement">Website improvement</option>
-          <option value="I want to measure something">
-            I want to measure something
-          </option>
-          <option value="Project">Project</option>
-        </select>
-      </div>
+      <div class="card-body">
+          <div class="row">
+            <div class="col-md-3 form-group">
+              <label for="site">Site</label>
+              <select
+                class="form-control"
+                v-model="brandFilter"
+                name="site"
+                id="site"
+                @change="setFilters"
+              >
+                <option value="">Select site to view</option>
+                <option value="Whirlpool MX">Whirlpool MX</option>
+                <option value="Maytag MX">Maytag MX</option>
+                <option value="Acros MX">Acros MX</option>
+                <option value="KitchenAid MX">Kitchenaid MX</option>
+                <option value="Whirlpool CO">Whirlpool CO</option>
+                <option value="KitchenAid CO">Kitchenaid CO</option>
+                <option value="Whirlpool GT">Whirlpool GT</option>
+                <option value="KitchenAid GT">Kitchenaid GT</option>
+                <option value="Whirlpool EC">Whirlpool EC</option>
+                <option value="Whirlpool PR">Whirlpool PR</option>
+                <option value="KitchenAid PR">Kitchenaid PR</option>
+                <option value="KitchenAid PE">Kitchenaid PE</option>
+              </select>
+            </div>
 
-      <div class="col-md-3 form-group">
-        <label for="requestUser">Request User</label>
-        <select
-          class="form-control"
-          name="requestUser"
-          id="requestUser"
-          @change="setFilters"
-          v-model="requestUserFilter"
-        >
-          <option value="">Select request user</option>
-          <option v-for="user in usersLists" :value="user">{{ user }}</option>
-        </select>
-      </div>
+            <div class="col-md-3 form-group">
+              <label for="requestType">Request Type</label>
+              <select
+                class="form-control"
+                name="requestType"
+                id="requestType"
+                @change="setFilters"
+                v-model="requestTypeFilter"
+              >
+                <option value="">Select request type</option>
+                <option value="Website improvement">Website improvement</option>
+                <option value="I want to measure something">
+                  I want to measure something
+                </option>
+                <option value="Project">Project</option>
+              </select>
+            </div>
+
+            <div class="col-md-3 form-group">
+              <label for="requestUser">Request User</label>
+              <select
+                class="form-control"
+                name="requestUser"
+                id="requestUser"
+                @change="setFilters"
+                v-model="requestUserFilter"
+              >
+                <option value="">Select request user</option>
+                <option v-for="user in usersLists" :value="user">
+                  {{ user }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
     </div>
     <div class="row">
       <div class="col-md-3">
@@ -80,7 +90,11 @@
           <div class="collapse show" id="collapseRequested">
             <div class="card-body" style="max-height: 750px; overflow-y: auto">
               <template v-if="isLoading">
-                <h3 class="animate__animated animate__lightSpeedInLeft animate__slow text-center">Loading</h3>
+                <h3
+                  class="animate__animated animate__lightSpeedInLeft animate__slow text-center"
+                >
+                  Loading
+                </h3>
               </template>
               <template
                 v-if="!isLoading"
@@ -116,7 +130,11 @@
           <div class="collapse show" id="collapseProcessing">
             <div class="card-body" style="max-height: 750px; overflow-y: auto">
               <template v-if="isLoading">
-                <h3 class="animate__animated animate__lightSpeedInLeft animate__slow text-center">Loading</h3>
+                <h3
+                  class="animate__animated animate__lightSpeedInLeft animate__slow text-center"
+                >
+                  Loading
+                </h3>
               </template>
               <template
                 v-if="!isLoading"
@@ -153,7 +171,11 @@
           <div class="collapse show" id="collapseInProgress">
             <div class="card-body" style="max-height: 750px; overflow-y: auto">
               <template v-if="isLoading">
-                <h3 class="animate__animated animate__lightSpeedInLeft animate__slow text-center">Loading</h3>
+                <h3
+                  class="animate__animated animate__lightSpeedInLeft animate__slow text-center"
+                >
+                  Loading
+                </h3>
               </template>
               <template
                 v-if="!isLoading"
@@ -169,7 +191,7 @@
         </div>
       </div>
 
-      <div class="col-md-3" style="max-height: 750px; overflow-y: auto">
+      <div class="col-md-3">
         <div class="card card-success">
           <div class="card-header text-center">
             <h3 class="card-title">
@@ -187,9 +209,13 @@
           </div>
 
           <div class="collapse show" id="collapseDone">
-            <div class="card-body">
+            <div class="card-body" style="max-height: 750px; overflow-y: auto">
               <template v-if="isLoading">
-                <h3 class="animate__animated animate__lightSpeedInLeft animate__slow text-center">Loading</h3>
+                <h3
+                  class="animate__animated animate__lightSpeedInLeft animate__slow text-center"
+                >
+                  Loading
+                </h3>
               </template>
               <template v-if="!isLoading" v-for="request in doneStatusRequests">
                 <KanbanCard
@@ -208,7 +234,7 @@
 import KanbanCard from "../../components/KanbanCard.vue";
 import Navbar from "../../components/Navbar.vue";
 import ContentContainer from "../../components/ContentContainer.vue";
-import { collect } from 'collect.js';
+import { collect } from "collect.js";
 
 export default {
   components: {
@@ -216,6 +242,7 @@ export default {
     Navbar,
     ContentContainer,
   },
+  name: "RequirementsKanbanBoard",
   data() {
     return {
       requests: [],
@@ -236,8 +263,8 @@ export default {
     this.getRequestsData();
   },
   methods: {
-    onLoadingCancel(){
-      this.isLoading = false
+    onLoadingCancel() {
+      this.isLoading = false;
     },
     getRequestsData() {
       google.script.run
@@ -245,11 +272,10 @@ export default {
         .getRequestsData();
     },
     onSuccessRequest(data) {
+      let collection = collect(JSON.parse(data)).sortByDesc("requestId").all();
 
-      let collection = collect(JSON.parse(data)).sortByDesc('requestId').all();
-
-      this.requests = collection
-      this.initialRequests = collection
+      this.requests = collection;
+      this.initialRequests = collection;
 
       this.usersLists = this.initialRequests.map((val) => val.requestUser);
 

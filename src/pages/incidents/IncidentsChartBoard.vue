@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    Requests by type
+                    Incidents by type
                 </h3>
             </div>
             <div class="card-body">
@@ -18,7 +18,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    Requests by brand
+                    Incidents by brand
                 </h3>
             </div>
             <div class="card-body">
@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    Requests by status
+                    Incidents by status
                 </h3>
             </div>
             <div class="card-body">
@@ -51,6 +51,7 @@ export default {
   components: {
     ContentContainer,
   },
+  name: 'IncidentsChartBoard',
   data() {
     return {
       requests: [],
@@ -63,22 +64,22 @@ export default {
     getRequestsData() {
       google.script.run
         .withSuccessHandler(this.onSuccessRequest)
-        .getRequestsData();
+        .getIncidentsData();
     },
     onSuccessRequest(data) {
       this.requests = JSON.parse(data);
 
       let collection = collect(this.requests);
 
-      let requestByTypeData = collection.groupBy("requestType").map((value) => {
+      let requestByTypeData = collection.groupBy("incidentType").map((value) => {
         return value.items.length;
       });
 
-      let requestByBrandData = collection.groupBy("requestBrand").map((value) => {
+      let requestByBrandData = collection.groupBy("incidentSite").map((value) => {
         return value.items.length;
       });
 
-      let requestByStatusData = collection.groupBy("requestStatus").map((value) => {
+      let requestByStatusData = collection.groupBy("incidentStatus").map((value) => {
         return value.items.length;
       });
 

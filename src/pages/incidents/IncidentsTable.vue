@@ -1,11 +1,12 @@
 <template>
-  <ContentContainer title="Requirements List">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Filters</h3>
-        </div>
-        <div class="card-body">
+  <ContentContainer title="Incidents List">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Filters</h3>
+      </div>
+
+      <div class="card-body">
+        <div class="col-md-12">
           <div class="row">
             <div class="form-group col-md-3">
               <label for="reqId">Id</label>
@@ -54,11 +55,13 @@
                 v-model="type"
               >
                 <option value="">Select request type</option>
-                <option value="Website improvement">Website improvement</option>
-                <option value="I want to measure something">
-                  I want to measure something
+                <option value="VTEX">VTEX</option>
+                <option value="VTEX/Wordpress">VTEX/Wordpress</option>
+                <option value="Merchant Center">Merchant Center</option>
+                <option value="Website">Website</option>
+                <option value="Google Analytics/Tag Manager">
+                  Google Analytics/Tag Manager
                 </option>
-                <option value="Project">Project</option>
               </select>
             </div>
 
@@ -107,28 +110,28 @@
               <template v-else>
                 <tr v-for="request in requests">
                   <td>
-                    <strong>{{ request.requestId }}</strong>
+                    <strong>{{ request.incidentId }}</strong>
                   </td>
                   <td>
                     <span :class="getBrandColor(request)">
-                      {{ request.requestBrand }}
+                      {{ request.incidentSite }}
                     </span>
                   </td>
                   <td>
                     <strong>
-                      {{ request.requestUser }}
+                      {{ request.incidentUser }}
                     </strong>
                   </td>
                   <td>
                     <span :class="getTypeColor(request)">
-                      {{ request.requestType }}
+                      {{ request.incidentType }}
                     </span>
                   </td>
-                  <td>{{ request.requestTitle }}</td>
-                  <td>{{ request.requestDescription }}</td>
+                  <td>{{ request.incidetnTitle }}</td>
+                  <td>{{ request.incidentDescription }}</td>
                   <td>
                     <span :class="getStatusColor(request)">
-                      {{ request.requestStatus }}
+                      {{ request.incidentStatus }}
                     </span>
                   </td>
                 </tr>
@@ -144,11 +147,11 @@
 import ContentContainer from "../../components/ContentContainer.vue";
 import ContentContainer from "../../components/ContentContainer.vue";
 import { collect } from "collect.js";
-import { typeColor, statusColor, reqBrandColor, incBrandColor } from "../../utils/color.utils";
+import { typeColor, statusColor, incBrandColor } from "../../utils/color.utils";
 
 export default {
-  name: "RequirementsTable",
   components: { ContentContainer },
+  name: "IncidentsTable",
   data() {
     return {
       requests: [],
@@ -167,7 +170,7 @@ export default {
   },
   methods: {
     getBrandColor(request) {
-      return brandColor(request);
+      return incBrandColor(request);
     },
     getTypeColor(request) {
       return typeColor(request);
@@ -175,21 +178,18 @@ export default {
     getStatusColor(request) {
       return statusColor(request);
     },
-    getBrandColor(request) {
-      return reqBrandColor(request);
-    },
     getRequestsData() {
       google.script.run
         .withSuccessHandler(this.onSuccessRequest)
-        .getRequestsData();
+        .getIncidentsData();
     },
     onSuccessRequest(data) {
       let collection = collect(JSON.parse(data));
-      this.usersLists = collection.map((val) => val.requestUser);
+      this.usersLists = collection.map((val) => val.incidentUser);
 
       this.usersLists = [...new Set(this.usersLists)];
 
-      this.requests = collection.sortByDesc("requestId").all();
+      this.requests = collection.sortByDesc("incidentId").all();
       this.initialRequests = JSON.parse(data);
       this.isLoading = false;
     },
@@ -198,7 +198,7 @@ export default {
 
       if (this.brand) {
         this.requests = this.requests.filter((request) => {
-          return request.requestBrand == this.brand;
+          return request.incidentSite == this.brand;
         });
       } else {
         this.requests = this.initialRequests;
@@ -207,7 +207,7 @@ export default {
       if (name == "reqId") {
         if (value) {
           this.requests = this.requests.filter((request) => {
-            return request.requestId == value;
+            return request.incidentId == value;
           });
         } else {
           this.requests = this.initialRequests;
@@ -217,7 +217,7 @@ export default {
       if (name == "type") {
         if (value) {
           this.requests = this.requests.filter((request) => {
-            return request.requestType == value;
+            return request.incidentType == value;
           });
         } else {
           this.requests = this.initialRequests;
@@ -227,7 +227,7 @@ export default {
       if (name == "requestUser") {
         if (value) {
           this.requests = this.requests.filter((request) => {
-            return request.requestUser == value;
+            return request.incidentUser == value;
           });
         } else {
           this.requests = this.initialRequests;

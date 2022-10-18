@@ -1,4 +1,4 @@
-export function brandColor(request) {
+export function reqBrandColor(request) {
     if (request.requestBrand.includes('Whirlpool')) {
         return 'badge badge-warning';
     }
@@ -20,6 +20,32 @@ export function brandColor(request) {
     }
 
     if (request.requestBrand.includes('Tienda')) {
+        return 'badge badge-secondary';
+    }
+}
+
+export function incBrandColor(request) {
+    if (request.incidentSite.includes('Whirlpool')) {
+        return 'badge badge-warning';
+    }
+
+    if (request.incidentSite.includes('Kitchen')) {
+        return 'badge badge-danger';
+    }
+
+    if (request.incidentSite.includes('Maytag')) {
+        return 'badge badge-primary';
+    }
+
+    if (request.incidentSite.includes('Acros')) {
+        return 'badge badge-info';
+    }
+
+    if (request.incidentSite.includes('Compra')) {
+        return 'badge badge-success';
+    }
+
+    if (request.incidentSite.includes('Tienda')) {
         return 'badge badge-secondary';
     }
 }

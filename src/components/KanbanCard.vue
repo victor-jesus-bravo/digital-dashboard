@@ -6,30 +6,30 @@
         <p>
             <a 
                 data-toggle="collapse" 
-                :href="'#collapse-' + req.requestId" 
+                :href="'#collapse-' + getId()" 
                 role="button" aria-expanded="false" 
-                :aria-controls="'#collapse-' + req.requestId"
+                :aria-controls="'#collapse-' + getId()"
                 class="text-reset"
             >
-                <strong>{{ req.requestId }}</strong> - {{ req.requestTitle}}
+                <strong>{{ req.requestId || req.incidentId }}</strong> - {{ req.requestTitle || req.incidentTitle }}
             </a>
         </p>
       </div>
 
-      <div class="collapse" :id="'collapse-' + req.requestId">
+      <div class="collapse" :id="'collapse-' + getId()">
         <div class="card-body">
         <div class="row">
           <div class="col-md-12">
             <p class="text-muted">
-              {{ req.requestDescription }}
+              {{ req.requestDescription || req.incidentDescription }}
             </p>
           </div>
           <div class="col-md-12">
-            <strong>Request user: </strong>{{ req.requestUser }}
+            <strong>Request user: </strong>{{ req.requestUser || req.incidentUser }}
           </div>
 
           <div class="col-md-12">
-            <strong>KPIS's: </strong> {{ req.requestReason }}
+            <strong>KPIS's: </strong> {{ req.requestReason || req.incidentReason }}
           </div>
         </div>
       </div>
@@ -38,14 +38,14 @@
       <div class="card-footer">
         <div class="row">
           <div class="col-md-12">
-            {{ req.requestType }} - <span :class="getBrandColor(req)">{{ req.requestBrand }}</span>
+            {{ req.requestType || req.incidentType }} - <span :class="getBrandColor(req)">{{ req.requestBrand || req.incidentSite }}</span>
           </div>
         </div>
       </div>
     </div>
 </template>
 <script>
-import { brandColor  } from '../utils/color.utils';
+import { reqBrandColor, incBrandColor  } from '../utils/color.utils';
 
 export default {
   props: {
@@ -60,7 +60,18 @@ export default {
   },
   methods: {
     getBrandColor(request) {
-      return brandColor(request)
+      if (this.req.requestId) {
+        return reqBrandColor(request);
+      }
+
+      return incBrandColor(request);
+    },
+    getId() {
+      if (this.req.requestId) {
+        return this.req.requestId;
+      }
+
+      return this.req.incidentId;
     }
   }
 };

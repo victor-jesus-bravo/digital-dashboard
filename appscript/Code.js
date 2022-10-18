@@ -1,7 +1,7 @@
 const REQUESTS_KEY = 'REQUESTS';
-const REQUESTS_HEADERS_KEY = 'REQUESTS_HEADERS';
+const INCIDENTS_KEY = 'INCIDENTS';
 const DURATION_CACHE_TIME = 3600;
-const emails = [
+const authorizedUsers = [
     "adrian_alberto_faz_jr@whirlpool.com",
     "dorlee_garcia@whirlpool.com",
     "victor_jesus_bravo@whirlpool.com",
@@ -13,7 +13,9 @@ const emails = [
 ];
 
 function doGet() {
-    return HtmlService.createTemplateFromFile('index')
+    const template = HtmlService.createTemplateFromFile('index');
+
+    return template
         .evaluate()
         .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
 }
@@ -25,10 +27,6 @@ function resetCache() {
 }
 
 function getRequestsData() {
-    const user = Session.getActiveUser();
-
-    Logger.log(user);
-
     const cache = CacheService.getScriptCache();
 
     const cachedData = cache.get(REQUESTS_KEY);
@@ -52,8 +50,42 @@ function getRequestsData() {
     );
 }
 
-function isAuthorizedUser(user) {
+function getIncidentsData() {
+    const cache = CacheService.getScriptCache();
+
+    const cachedData = cache.get(INCIDENTS_KEY);
+
+    if (cachedData) {
+        return cachedData;
+    }
+
+    const spreadSheet = SpreadsheetApp
+        .openByUrl('https://docs.google.com/spreadsheets/d/1hIMcoX4MLztbbG_p8oRie4duxd-sxiN_7LML91hEfK8/edit#gid=234180280');
     
+    let requestSheet = spreadSheet.getSheetByName('INCIDENT');
+    let [headers, ...data] = requestSheet.getDataRange().getValues();
+
+    cache.put(INCIDENTS_KEY, JSON.stringify(
+        sanitizeData(data, headers)
+    ));
+
+    return JSON.stringify(
+        sanitizeData(data, headers)
+    );
+}
+
+function checkUserAuthorization() {
+    if (!isAuthorizedUser(user)) {
+        return user;
+    }
+}
+
+function isAuthorizedUser(user) {
+    if (authorizedUsers.includes(user)) {
+        return true;
+    }
+
+    return false;
 }
 
 function sanitizeData(data, headers) {

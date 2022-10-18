@@ -37,7 +37,7 @@
 
               <li>
                 <router-link
-                  to="/chart-board"
+                  to="/reqs-chart-board"
                   class="nav-link"
                   active-class="active"
                 >
@@ -48,6 +48,49 @@
               <li>
                 <router-link
                   to="/reqs-table"
+                  class="nav-link"
+                  active-class="active"
+                >
+                  Table
+                </router-link>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a
+              id="dropdownSubMenu2"
+              href="#"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              class="nav-link dropdown-toggle"
+              >Incidents</a
+            >
+            <ul
+              aria-labelledby="dropdownSubMenu2"
+              class="dropdown-menu border-0 shadow"
+              style="left: 0px; right: inherit"
+            >
+              <li>
+                <router-link to="/inc-kanban" class="nav-link" active-class="active">
+                  KanbanBoard
+                </router-link>
+              </li>
+
+              <li>
+                <router-link
+                  to="/inc-chart-board"
+                  class="nav-link"
+                  active-class="active"
+                >
+                  ChartBoard
+                </router-link>
+              </li>
+
+              <li>
+                <router-link
+                  to="/inc-table"
                   class="nav-link"
                   active-class="active"
                 >
