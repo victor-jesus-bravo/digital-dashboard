@@ -148,6 +148,7 @@ import ContentContainer from "../../components/ContentContainer.vue";
 import ContentContainer from "../../components/ContentContainer.vue";
 import { collect } from "collect.js";
 import { typeColor, statusColor, incBrandColor } from "../../utils/color.utils";
+import { runGoogleScript } from '../../utils/google.run';
 
 export default {
   components: { ContentContainer },
@@ -165,8 +166,8 @@ export default {
       usersLists: [],
     };
   },
-  mounted() {
-    this.getRequestsData();
+  async mounted() {
+    await this.getRequestsData();
   },
   methods: {
     getBrandColor(request) {
@@ -178,7 +179,8 @@ export default {
     getStatusColor(request) {
       return statusColor(request);
     },
-    getRequestsData() {
+    async getRequestsData() {
+      let data = await runGoogleScript('getIncidentsData');
       google.script.run
         .withSuccessHandler(this.onSuccessRequest)
         .getIncidentsData();

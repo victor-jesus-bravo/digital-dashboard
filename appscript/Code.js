@@ -1,17 +1,3 @@
-const REQUESTS_KEY = 'REQUESTS';
-const INCIDENTS_KEY = 'INCIDENTS';
-const DURATION_CACHE_TIME = 3600;
-const authorizedUsers = [
-    "adrian_alberto_faz_jr@whirlpool.com",
-    "dorlee_garcia@whirlpool.com",
-    "victor_jesus_bravo@whirlpool.com",
-    "kattia_puga@whirlpool.com",
-    "octavio_r_giron@whirlpool.com",
-    "nicolas_carvajal_mapower@whirlpool.com",
-    "karen_marin@whirlpool.com",
-    "marcelo_lozada@whirlpool.com"
-];
-
 function doGet() {
     const template = HtmlService.createTemplateFromFile('index');
 
@@ -20,81 +6,20 @@ function doGet() {
         .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
 }
 
-function resetCache() {
-    const cache = CacheService.getScriptCache();
+function saveRequest(form) {
+    let reqUser = Session.getActiveUser().getEmail();
 
-    cache.remove(REQUESTS_KEY);
-}
+    const helperSheet = spreadSheet.getSheetByName('HELPER');
 
-function getRequestsData() {
-    const cache = CacheService.getScriptCache();
-
-    const cachedData = cache.get(REQUESTS_KEY);
-
-    if (cachedData) {
-        return cachedData;
-    }
-
-    const spreadSheet = SpreadsheetApp
-        .openByUrl('https://docs.google.com/spreadsheets/d/1hIMcoX4MLztbbG_p8oRie4duxd-sxiN_7LML91hEfK8/edit#gid=234180280');
+    let getNumberId = searchId('REQUEST',helperSheet);
+    getNumberId = getNumberId[1] + 1;
+    let newReq = "REQ" + pad(getNumberId, 5);
     
-    let requestSheet = spreadSheet.getSheetByName('REQUEST');
-    let [headers, ...data] = requestSheet.getDataRange().getValues();
+    spreadSheet.getSheetByName('REQUEST').appendRow([newReq, new Date().toLocaleDateString(), reqUser, form.reqType, form.brand, form.title, form.description, form.kpi,'requested','tbd'])
 
-    cache.put(REQUESTS_KEY, JSON.stringify(
-        sanitizeData(data, headers)
-    ));
+    modifyId('REQUEST',helperSheet,2,getNumberId);
 
-    return JSON.stringify(
-        sanitizeData(data, headers)
-    );
-}
-
-function getIncidentsData() {
-    const cache = CacheService.getScriptCache();
-
-    const cachedData = cache.get(INCIDENTS_KEY);
-
-    if (cachedData) {
-        return cachedData;
-    }
-
-    const spreadSheet = SpreadsheetApp
-        .openByUrl('https://docs.google.com/spreadsheets/d/1hIMcoX4MLztbbG_p8oRie4duxd-sxiN_7LML91hEfK8/edit#gid=234180280');
-    
-    let requestSheet = spreadSheet.getSheetByName('INCIDENT');
-    let [headers, ...data] = requestSheet.getDataRange().getValues();
-
-    cache.put(INCIDENTS_KEY, JSON.stringify(
-        sanitizeData(data, headers)
-    ));
-
-    return JSON.stringify(
-        sanitizeData(data, headers)
-    );
-}
-
-function checkUserAuthorization() {
-    if (!isAuthorizedUser(user)) {
-        return user;
+    return {
+        status: 200
     }
 }
-
-function isAuthorizedUser(user) {
-    if (authorizedUsers.includes(user)) {
-        return true;
-    }
-
-    return false;
-}
-
-function sanitizeData(data, headers) {
-    return data.map(row => {
-        return row.reduce((acc, value, i) => {
-          const key = headers[i];
-          if (key === '') return acc;
-          return { ...acc, [key]: value };
-        }, {});
-    });
-}
-

@@ -235,6 +235,7 @@ import KanbanCard from "../../components/KanbanCard.vue";
 import Navbar from "../../components/Navbar.vue";
 import ContentContainer from "../../components/ContentContainer.vue";
 import { collect } from "collect.js";
+import { runGoogleScript } from '../../utils/google.run';
 
 export default {
   components: {
@@ -259,7 +260,21 @@ export default {
       requestUserFilter: "",
     };
   },
-  mounted() {
+  async mounted() {
+    let data = await runGoogleScript('getRequestsData');
+
+    let collection = collect(JSON.parse(data)).sortByDesc("requestId").all();
+
+    this.requests = collection;
+    this.initialRequests = collection;
+
+    this.usersLists = this.initialRequests.map((val) => val.requestUser);
+
+    this.usersLists = [...new Set(this.usersLists)];
+
+    this.setRequestLists();
+
+    this.isLoading = false;
     this.getRequestsData();
   },
   methods: {
@@ -270,20 +285,6 @@ export default {
       google.script.run
         .withSuccessHandler(this.onSuccessRequest)
         .getRequestsData();
-    },
-    onSuccessRequest(data) {
-      let collection = collect(JSON.parse(data)).sortByDesc("requestId").all();
-
-      this.requests = collection;
-      this.initialRequests = collection;
-
-      this.usersLists = this.initialRequests.map((val) => val.requestUser);
-
-      this.usersLists = [...new Set(this.usersLists)];
-
-      this.setRequestLists();
-
-      this.isLoading = false;
     },
     setRequestLists() {
       this.requestedStatusRequests = this.requests.filter((value) => {

@@ -274,7 +274,6 @@ export default {
         .getIncidentsData();
     },
     onSuccessRequest(data) {
-      console.log(data);
 
       let collection = collect(JSON.parse(data)).sortByDesc("incidentId").all();
 

@@ -54,6 +54,16 @@
                   Table
                 </router-link>
               </li>
+
+              <li>
+                <router-link
+                  to="/request-requirement"
+                  class="nav-link"
+                  active-class="active"
+                >
+                  Request
+                </router-link>
+              </li>
             </ul>
           </li>
 
