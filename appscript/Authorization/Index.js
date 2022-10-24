@@ -9,10 +9,18 @@ const authorizedUsers = [
     "marcelo_lozada@whirlpool.com"
 ];
 
-function checkUserAuthorization() {
+function checkUserAuthorization(user) {
     if (!isAuthorizedUser(user)) {
         return user;
     }
+}
+
+function isAdminDashboard(parameters) {
+    if (parameters.isAdminDashboard) {
+        return true;
+    }
+
+    return false;
 }
 
 function isAuthorizedUser(user) {

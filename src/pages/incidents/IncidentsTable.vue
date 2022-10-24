@@ -87,7 +87,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body" style="max-height: 750px; overflow-y: auto">
-          <table class="table table-hover table-sm table-stripped">
+          <table class="table table-hover table-bordered table-sm table-stripped">
             <thead>
               <tr>
                 <th>Id</th>
@@ -127,7 +127,7 @@
                       {{ request.incidentType }}
                     </span>
                   </td>
-                  <td>{{ request.incidetnTitle }}</td>
+                  <td>{{ request.incidentTitle }}</td>
                   <td>{{ request.incidentDescription }}</td>
                   <td>
                     <span :class="getStatusColor(request)">

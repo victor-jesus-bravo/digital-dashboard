@@ -34,3 +34,7 @@ function modifyId(searchChosenId,searchSheetId, cellId, contentToBe){
   var search_row = textFinder.findAll()[0].getRow();
   searchSheetId.getRange(search_row,cellId).setValue(contentToBe);
 }
+
+function getCurrentUser() {
+  return Session.getActiveUser().getEmail();
+}

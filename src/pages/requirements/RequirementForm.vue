@@ -3,7 +3,7 @@
     <div class="col-md-8 offset-2">
         <div class="card">
             <div class="card-body">
-                <form-wizard color="#0d436b" @on-complete="saveRequest" :start-index="currentStep">
+                <form-wizard color="#0d436b" @on-complete="saveRequest" :start-index="currentStep" >
                     <hr>
                     <tab-content :before-change="beforeFirstStep">
                         <div class="row">
@@ -78,7 +78,6 @@
   </ContentContainer>
 </template>
 <script>
-import { ref } from "vue";
 import { FormWizard, TabContent } from "vue3-form-wizard";
 import ContentContainer from "../../components/ContentContainer.vue";
 import { runGoogleScript } from '../../utils/google.run';
@@ -111,6 +110,7 @@ export default {
   },
   methods: {
     async saveRequest() {
+        this.setLoading();
         try {
             const res = await runGoogleScript('saveRequest', {
                 brand: this.site,
@@ -146,9 +146,27 @@ export default {
     beforeSecondStep() {
         return this.validateSecondInputs();
     },
+    async setLoading() {
+        Swal.fire({
+            title: 'Saving the requirement!',
+            html: 'Give me <b></b> seconds.',
+            timer: 2500,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        })
+    },
     validateSecondInputs() {
-        this.title = '';
-        this.description = '';
+        this.errors.title = '';
+        this.errors.description = '';
 
         if (!this.title) {
             this.errors.title = 'Requirement title is required';
