@@ -84,7 +84,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body" style="max-height: 750px; overflow-y: auto">
-          <table class="table table-hover table-sm table-stripped">
+          <table class="table table-hover table-bordered table-sm table-stripped">
             <thead>
               <tr>
                 <th>Id</th>
@@ -144,7 +144,8 @@
 import ContentContainer from "../../components/ContentContainer.vue";
 import ContentContainer from "../../components/ContentContainer.vue";
 import { collect } from "collect.js";
-import { typeColor, statusColor, reqBrandColor, incBrandColor } from "../../utils/color.utils";
+import { runGoogleScript } from '../../utils/google.run';
+import { typeColor, statusColor, reqBrandColor } from "../../utils/color.utils";
 
 export default {
   name: "RequirementsTable",
@@ -162,8 +163,16 @@ export default {
       usersLists: [],
     };
   },
-  mounted() {
-    this.getRequestsData();
+  async mounted() {
+    let data = await runGoogleScript('getRequestsData')
+    let collection = collect(JSON.parse(data));
+    this.usersLists = collection.map((val) => val.requestUser);
+
+    this.usersLists = [...new Set(this.usersLists)];
+
+    this.requests = collection.sortByDesc("requestId").all();
+    this.initialRequests = JSON.parse(data);
+    this.isLoading = false;
   },
   methods: {
     getBrandColor(request) {
@@ -177,21 +186,6 @@ export default {
     },
     getBrandColor(request) {
       return reqBrandColor(request);
-    },
-    getRequestsData() {
-      google.script.run
-        .withSuccessHandler(this.onSuccessRequest)
-        .getRequestsData();
-    },
-    onSuccessRequest(data) {
-      let collection = collect(JSON.parse(data));
-      this.usersLists = collection.map((val) => val.requestUser);
-
-      this.usersLists = [...new Set(this.usersLists)];
-
-      this.requests = collection.sortByDesc("requestId").all();
-      this.initialRequests = JSON.parse(data);
-      this.isLoading = false;
     },
     setFilters({ target: { name, value } }) {
       this.requests = this.initialRequests;

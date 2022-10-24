@@ -46,6 +46,7 @@
 import ContentContainer from "../../components/ContentContainer.vue";
 import Chart from "chart.js/auto";
 import { collect } from "collect.js";
+import { runGoogleScript } from '../../utils/google.run';
 
 export default {
   components: {
@@ -61,14 +62,12 @@ export default {
     };
   },
   methods: {
-    getRequestsData() {
-      google.script.run
-        .withSuccessHandler(this.onSuccessRequest)
-        .getRequestsData();
+    async getRequestsData() {
+      const data = await runGoogleScript('getRequestsData')
+
+      this.onSuccessRequest(data)
     },
     onSuccessRequest(data) {
-
-      console.log(JSON.parse(data))
       this.requests = JSON.parse(data);
 
       let collection = collect(this.requests);
@@ -155,9 +154,8 @@ export default {
       requestByType;
     },
   },
-  mounted() {
-    console.log('im in requirements chartboard')
-    this.getRequestsData();
+  async mounted() {
+    await this.getRequestsData();
   },
 };
 </script>

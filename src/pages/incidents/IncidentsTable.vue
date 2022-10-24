@@ -87,7 +87,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body" style="max-height: 750px; overflow-y: auto">
-          <table class="table table-hover table-sm table-stripped">
+          <table class="table table-hover table-bordered table-sm table-stripped">
             <thead>
               <tr>
                 <th>Id</th>
@@ -127,7 +127,7 @@
                       {{ request.incidentType }}
                     </span>
                   </td>
-                  <td>{{ request.incidetnTitle }}</td>
+                  <td>{{ request.incidentTitle }}</td>
                   <td>{{ request.incidentDescription }}</td>
                   <td>
                     <span :class="getStatusColor(request)">
@@ -148,6 +148,7 @@ import ContentContainer from "../../components/ContentContainer.vue";
 import ContentContainer from "../../components/ContentContainer.vue";
 import { collect } from "collect.js";
 import { typeColor, statusColor, incBrandColor } from "../../utils/color.utils";
+import { runGoogleScript } from '../../utils/google.run';
 
 export default {
   components: { ContentContainer },
@@ -165,8 +166,8 @@ export default {
       usersLists: [],
     };
   },
-  mounted() {
-    this.getRequestsData();
+  async mounted() {
+    await this.getRequestsData();
   },
   methods: {
     getBrandColor(request) {
@@ -178,7 +179,8 @@ export default {
     getStatusColor(request) {
       return statusColor(request);
     },
-    getRequestsData() {
+    async getRequestsData() {
+      let data = await runGoogleScript('getIncidentsData');
       google.script.run
         .withSuccessHandler(this.onSuccessRequest)
         .getIncidentsData();
